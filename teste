@@ -1,0 +1,38 @@
+# Projeto de Modelagem: Biossíntese de PHB via Cupriavidus necator
+**Disciplina:** Modelagem e Simulação de Bioprocessos - UTFPR  
+**Acadêmico:** Marcus Vinicius Redkva
+
+## 1. P&ID - Diagrama de Tubulação e Instrumentação
+Este diagrama representa o biorreator de batelada alimentada (fed-batch) com a estratégia de controle DO-stat.
+
+```mermaid
+graph TD
+    %% Componentes do Reator
+    subgraph Biorreator_R101 [Vaso do Reator R-101]
+        Vaso((Biorreator Encamisado))
+        Agitador[Agitador Mecânico AG]
+    end
+
+    %% Entradas e Utilidades
+    Substrato[(Fonte de Carbono: Glicose)] -->|Bomba FIC-104| Vaso
+    AcidoBase[(Tanques pH: Ácido/Base)] -->|Bombas PHRC| Vaso
+    Ar[(Ar Estéril)] -->|Válvula DO-RC| Vaso
+    Vapor[(Vapor/Água Fria)] -->|Válvula TRC| Jaqueta[Jaqueta de Resfriamento]
+
+    %% Malhas de Controle e Sensores
+    Vaso -.->|Sensor Temp| TRC((TRC - Temperatura))
+    Vaso -.->|Sensor pH| PHRC((PHRC - pH))
+    Vaso -.->|Sensor O2| AIC103((AIC-103 - O2 Dissolvido))
+    
+    %% Controle em Cascata (DO-stat)
+    AIC103 ==>|Setpoint Remoto| FIC104((FIC-104 - Vazão))
+    FIC104 -.->|Controle| Substrato
+
+    %% Saídas
+    Vaso --> Saida[Saída de Gases / Off-gas]
+    Vaso --> Produto[Dreno / Colheita de PHB]
+
+    %% Estilização
+    style Vaso fill:#f9f,stroke:#333,stroke-width:4px
+    style AIC103 fill:#dfd,stroke:#333
+    style FIC104 fill:#dfd,stroke:#333
